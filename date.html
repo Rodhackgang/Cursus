@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de la Date de Déblocage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #6e8efb;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #4a6cf7;
+        }
+
+        .response {
+            margin-top: 20px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestion de la Date de Déblocage</h1>
+
+        <div>
+            <label for="current-date">Date actuelle</label>
+            <input type="text" id="current-date" readonly placeholder="--/--/----~--h:--">
+        </div>
+
+        <div>
+            <label for="new-date">Nouvelle Date (jj/mm/aaaa)</label>
+            <input type="text" id="new-date" placeholder="21/12/2024">
+        </div>
+
+        <div>
+            <label for="new-time">Nouvelle Heure (hh:mm)</label>
+            <input type="text" id="new-time" placeholder="23:59">
+        </div>
+
+        <button id="update-button">Mettre à Jour</button>
+
+        <div class="response" id="response"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://cursus.up.railway.app';
+
+        // Fonction pour récupérer la date actuelle
+        async function fetchCurrentDate() {
+            try {
+                const response = await fetch(`${API_URL}/debloquage`);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération de la date actuelle.');
+                }
+                const data = await response.json();
+                document.getElementById('current-date').value = data.debloquageDate;
+            } catch (error) {
+                document.getElementById('response').innerText = error.message;
+            }
+        }
+
+        // Fonction pour mettre à jour la date
+        async function updateDate() {
+            const newDate = document.getElementById('new-date').value;
+            const newTime = document.getElementById('new-time').value;
+            const responseElement = document.getElementById('response');
+
+            if (!newDate || !newTime) {
+                responseElement.innerText = 'Veuillez remplir la nouvelle date et heure.';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/debloquage/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ date: newDate, heure: newTime }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la mise à jour de la date.');
+                }
+
+                const data = await response.json();
+                responseElement.innerText = `Succès : ${data.message}`;
+
+                // Actualiser la date affichée
+                fetchCurrentDate();
+            } catch (error) {
+                responseElement.innerText = error.message;
+            }
+        }
+
+        // Ajouter un écouteur d'événements pour le bouton
+        document.getElementById('update-button').addEventListener('click', updateDate);
+
+        // Charger la date actuelle au démarrage
+        fetchCurrentDate();
+    </script>
+</body>
+</html>
