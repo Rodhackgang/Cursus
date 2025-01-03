@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions du Partenariat</title>
+    <style>
+        /* Variables de couleur pour une meilleure gestion */
+        :root {
+            --background-overlay: rgba(0, 0, 0, 0.7);
+            --container-bg: #ffffff;
+            --primary-color: #007aff;
+            --secondary-color: #FC6DAB;
+            --text-color: #333333;
+            --info-bg: rgba(0, 0, 0, 0.05);
+            --button-bg: #007aff;
+            --button-hover-bg: #005bb5;
+            --button-text: #ffffff;
+            --border-color: #ddd;
+        }
+
+        /* Reset de base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-overlay);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--container-bg);
+            color: var(--text-color);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-x: hidden;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Styles pour les petits écrans */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 5px;
+                padding: 10px;
+                background-color: #f9f9f9;
+            }
+
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+            }
+
+            td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: var(--primary-color);
+                flex-basis: 50%;
+                text-align: left;
+            }
+
+            td:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .info-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--info-bg);
+            border-radius: 5px;
+        }
+
+        .info-text {
+            margin-bottom: 10px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .bold-text {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .close-button {
+            display: block;
+            width: 150px;
+            margin: 30px auto 0;
+            padding: 12px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        /* Styles additionnels pour améliorer l'apparence sur mobile */
+        @media (max-width: 768px) {
+            .close-button {
+                width: 100%;
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 1.5em;
+            }
+
+            .info-text {
+                font-size: 0.9em;
+            }
+
+            .close-button {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Conditions du Partenariat</div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Niveau</th>
+                        <th>Valeur du Code</th>
+                        <th>Avantage</th>
+                        <th>Objectif</th>
+                        <th>Valeur Objectif</th>
+                        <th>Valeur Totale</th>
+                        <th>Bonus Finalisation</th>
+                        <th>Bonus Parrain</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="info-section">
+            <p class="info-text">💡 <span class="bold-text">Valeur du code</span> : C’est la somme que vos filleuls doivent payer lors de leur abonnement sur la plateforme.</p>
+            <p class="info-text">🎁 <span class="bold-text">Avantage d’abonnement par niveau</span> : Ce sont les avantages pour vos filleuls lors de leur abonnement en fonction de votre niveau.</p>
+            <p class="info-text">🎯 <span class="bold-text">Objectif du niveau</span> : C’est le nombre de personnes qui doivent s’abonner avec votre code pour que vous puissiez passer aux niveaux suivants.</p>
+            <p class="info-text">💰 <span class="bold-text">Valeur par objectif</span> : C’est la somme qui vous sera envoyée après chaque abonnement.</p>
+            <p class="info-text">💡 <span class="bold-text">Valeur totale de l’objectif</span> : C’est la somme totale que vous allez avoir si vous finalisez un niveau.</p>
+            <p class="info-text">🎉 <span class="bold-text">Bonus de finalisation du niveau</span> : C’est la somme qui vous sera envoyée comme prime de finalisation d’un niveau.</p>
+            <p class="info-text">👥 <span class="bold-text">Bonus parrain-parrain</span> : C’est la somme qui vous sera envoyée directement si vous amenez un partenaire.</p>
+            <p class="info-text">🔑 <span class="bold-text">NB</span> : Tout partenaire doit être forcément abonné pour pouvoir bénéficier des avantages.</p>
+        </div>
+
+        <button class="close-button" onclick="closeConditions()">Fermer</button>
+    </div>
+
+    <script>
+        const data = [
+            { niveau: 'NIVEAU 1', valeurCode: '3.000 FCFA', avantage: 'Avoir les 7 premiers quizz gratuitement', objectif: 100, valeurObjectif: '500 FCFA', valeurTotale: '50.000 FCFA', bonusFinalisation: '25.000 FCFA', bonusParrain: '1.000 FCFA' },
+            { niveau: 'NIVEAU 2', valeurCode: '2.500 FCFA', avantage: 'Accès premium pendant 1 mois', objectif: 200, valeurObjectif: '1.000 FCFA', valeurTotale: '100.000 FCFA', bonusFinalisation: '50.000 FCFA', bonusParrain: '2.000 FCFA' },
+            { niveau: 'NIVEAU 3', valeurCode: '2.000 FCFA', avantage: 'Accès premium pendant 3 mois', objectif: 400, valeurObjectif: '1.500 FCFA', valeurTotale: '200.000 FCFA', bonusFinalisation: '75.000 FCFA', bonusParrain: '3.000 FCFA' },
+            { niveau: 'NIVEAU 4', valeurCode: '1.750 FCFA', avantage: 'Accès premium illimité', objectif: 1000, valeurObjectif: '2.000 FCFA', valeurTotale: '500.000 FCFA', bonusFinalisation: '150.000 FCFA', bonusParrain: '5.000 FCFA' },
+        ];
+
+        const tableBody = document.getElementById('table-body');
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+
+            // Création des cellules avec attributs data-label pour le responsive
+            for (const key in item) {
+                const cell = document.createElement('td');
+                cell.textContent = item[key];
+
+                // Associer chaque cellule à son en-tête pour le responsive
+                let label = '';
+                switch(key) {
+                    case 'niveau':
+                        label = 'Niveau';
+                        break;
+                    case 'valeurCode':
+                        label = 'Valeur du Code';
+                        break;
+                    case 'avantage':
+                        label = 'Avantage';
+                        break;
+                    case 'objectif':
+                        label = 'Objectif';
+                        break;
+                    case 'valeurObjectif':
+                        label = 'Valeur Objectif';
+                        break;
+                    case 'valeurTotale':
+                        label = 'Valeur Totale';
+                        break;
+                    case 'bonusFinalisation':
+                        label = 'Bonus Finalisation';
+                        break;
+                    case 'bonusParrain':
+                        label = 'Bonus Parrain';
+                        break;
+                    default:
+                        label = '';
+                }
+
+                cell.setAttribute('data-label', label);
+                row.appendChild(cell);
+            }
+
+            tableBody.appendChild(row);
+        });
+
+        function closeConditions() {
+            // Vous pouvez personnaliser cette fonction pour fermer réellement la fenêtre/modal
+            // Par exemple, si c'est une modal, vous pouvez la masquer ici
+            alert('Fenêtre fermée');
+        }
+    </script>
+</body>
+</html>
