@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numéros de Téléphone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <h1>Liste des Numéros de Téléphone</h1>
+    <div id="phone-numbers">
+        <!-- Les numéros vont être affichés ici -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        padding: 20px;
+        background-color: #333;
+        color: white;
+    }
+
+    #phone-numbers {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+    }
+
+    .phone-group {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        width: 100%;
+        max-width: 800px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+    }
+
+    .phone-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .phone-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 5px;
+        width: 150px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .phone {
+        margin-top: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .phone:hover {
+        color: #007bff;
+    }
+
+    .copy-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
+        color: #007bff;
+    }
+
+    .copy-icon:hover {
+        color: #0056b3;
+    }
+</style>
+
+<script>
+    // script.js
+const apiUrl = 'https://cursusbf.up.railway.app/api/phone-numbers';
+
+// Fonction pour récupérer les numéros depuis l'API
+async function fetchPhoneNumbers() {
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        displayPhoneNumbers(data.classifiedNumbers);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données', error);
+    }
+}
+
+// Fonction pour organiser et afficher les numéros
+function displayPhoneNumbers(numbers) {
+    const container = document.getElementById('phone-numbers');
+    container.innerHTML = ''; // Réinitialiser le contenu avant d'ajouter
+
+    // Regrouper les numéros par opérateur et par type VIP/Non-VIP
+    const groupedNumbers = {
+        'Orange': { 'VIP': [], 'Non-VIP': [] },
+        'Moov': { 'VIP': [], 'Non-VIP': [] },
+        'Telecel': { 'VIP': [], 'Non-VIP': [] }
+    };
+
+    numbers.forEach(item => {
+        if (item.operator === 'Orange') {
+            groupedNumbers.Orange[item.isVIP].push(item.phone);
+        } else if (item.operator === 'Moov') {
+            groupedNumbers.Moov[item.isVIP].push(item.phone);
+        } else if (item.operator === 'Telecel') {
+            groupedNumbers.Telecel[item.isVIP].push(item.phone);
+        }
+    });
+
+    // Fonction pour créer un bloc de numéros
+    function createGroupCard(title, group, groupName) {
+        const card = document.createElement('div');
+        card.classList.add('phone-group');
+        card.innerHTML = `<h3>${title}</h3>`;
+        
+        const copyIcon = document.createElement('i');
+        copyIcon.classList.add('fas', 'fa-copy', 'copy-icon');
+        copyIcon.onclick = () => copyGroupPhones(group);
+        card.appendChild(copyIcon);
+
+        const phoneList = document.createElement('div');
+        phoneList.classList.add('phone-list');
+        
+        // Ajouter les numéros dans le groupe
+        const phoneItems = group.map(phone => {
+            const phoneItem = document.createElement('div');
+            phoneItem.classList.add('phone-item');
+            phoneItem.innerHTML = `<div class="phone" onclick="copyPhone('${phone}')">${phone}</div>`;
+            return phoneItem;
+        });
+
+        phoneItems.forEach(item => phoneList.appendChild(item));
+        card.appendChild(phoneList);
+        container.appendChild(card);
+
+        // Fonction pour copier tous les numéros du groupe
+        function copyGroupPhones(group) {
+            const phoneString = group.join(';');
+            navigator.clipboard.writeText(phoneString).then(() => {
+                alert('Numéros copiés : ' + phoneString);
+            }).catch(err => {
+                console.error('Erreur de copie', err);
+            });
+        }
+    }
+
+    // Créer les cards de chaque groupe d'opérateurs avec les VIP et Non-VIP séparés
+    createGroupCard('Orange Confondus', [...groupedNumbers.Orange.VIP, ...groupedNumbers.Orange['Non-VIP']], 'orangeConfondus');
+    createGroupCard('Moov Confondus', [...groupedNumbers.Moov.VIP, ...groupedNumbers.Moov['Non-VIP']], 'moovConfondus');
+    createGroupCard('Telecel Confondus', [...groupedNumbers.Telecel.VIP, ...groupedNumbers.Telecel['Non-VIP']], 'telecelConfondus');
+
+    createGroupCard('Orange VIP', groupedNumbers.Orange.VIP, 'orangeVIP');
+    createGroupCard('Orange Non-VIP', groupedNumbers.Orange['Non-VIP'], 'orangeNonVIP');
+    createGroupCard('Moov VIP', groupedNumbers.Moov.VIP, 'moovVIP');
+    createGroupCard('Moov Non-VIP', groupedNumbers.Moov['Non-VIP'], 'moovNonVIP');
+    createGroupCard('Telecel VIP', groupedNumbers.Telecel.VIP, 'telecelVIP');
+    createGroupCard('Telecel Non-VIP', groupedNumbers.Telecel['Non-VIP'], 'telecelNonVIP');
+}
+
+// Fonction pour copier le numéro de téléphone dans le presse-papiers
+function copyPhone(phone) {
+    navigator.clipboard.writeText(phone).then(() => {
+        alert('Numéro copié : ' + phone);
+    }).catch(err => {
+        console.error('Erreur de copie', err);
+    });
+}
+
+// Appeler la fonction pour récupérer les numéros à l'initialisation
+fetchPhoneNumbers();
+
+</script>
