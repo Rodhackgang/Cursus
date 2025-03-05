@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursus - Redirection Deeplink</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            background-color: #007aff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenue sur Cursus</h1>
+    <p>Vous allez être redirigé vers la page Register.</p>
+
+    <script>
+        // L'URL deeplink et l'URL Play Store
+        const deeplinkURL = "cursus://register";  // Deeplink vers l'application
+        const playStoreURL = "https://play.google.com/store/apps/details?id=com.devweb012.prepacon&pcampaignid=web_share";  // URL du Play Store
+
+        // Tenter d'ouvrir le deeplink
+        const startTime = Date.now();
+        window.location = deeplinkURL;
+
+        // Attendre un court moment et vérifier si l'application a ouvert
+        setTimeout(() => {
+            const endTime = Date.now();
+            // Si l'application n'a pas répondu dans les 2 secondes, on redirige vers le Play Store
+            if (endTime - startTime < 2000) {
+                window.location = playStoreURL;
+            }
+        }, 1500);  // Attends 1,5 seconde pour vérifier si l'app s'ouvre
+    </script>
+</body>
+</html>
