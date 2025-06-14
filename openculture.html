@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Redirection vers l'application Cursus</title>
-    <!-- Ajout pour le mobile -->
     <meta name="apple-itunes-app" content="app-id=APP_STORE_ID">
     <meta name="google-play-app" content="app-id=com.cursus.actualite">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -347,6 +346,7 @@
         // Schéma de deep link
         const deeplinkURL = "cursus_actualite://";
         const playStoreURL = "https://play.google.com/store/apps/details?id=com.cursus.actualite";
+        const fallbackURL = "https://www.cursusbf.com/openculture.html";
         
         // Éléments DOM
         const statusText = document.getElementById('status-text');
@@ -357,8 +357,44 @@
         const loader = document.querySelector('.loader');
         const statusContainer = document.querySelector('.status-container');
         
+        // Vérification d'erreur 404
+        function is404Error() {
+            // Vérifier si la page actuelle est une erreur 404
+            if (document.title.includes("404") || 
+                document.body.innerText.includes("404") || 
+                document.body.innerText.includes("Not Found")) {
+                return true;
+            }
+            
+            // Vérifier le code d'état HTTP si possible
+            if (window.performance && window.performance.getEntriesByType) {
+                const resources = window.performance.getEntriesByType("resource");
+                for (let resource of resources) {
+                    if (resource.responseStatus >= 400) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        // Fonction de redirection vers la page de secours
+        function redirectToFallback() {
+            // Vérifier que nous ne sommes pas déjà sur la page de secours
+            if (window.location.href !== fallbackURL) {
+                window.location.href = fallbackURL;
+            }
+        }
+        
         // Fonction pour ouvrir l'application
         function openApp() {
+            // Vérifier si nous avons une erreur 404
+            if (is404Error()) {
+                redirectToFallback();
+                return;
+            }
+            
             statusText.textContent = "Ouverture de l'application...";
             loader.style.display = 'block';
             countdownElement.style.display = 'none';
@@ -376,6 +412,12 @@
         
         // Fonction pour afficher l'état d'erreur
         function showError() {
+            // Vérifier si nous avons une erreur 404
+            if (is404Error()) {
+                redirectToFallback();
+                return;
+            }
+            
             statusContainer.style.display = 'none';
             errorMessage.style.display = 'block';
             loader.style.display = 'none';
@@ -407,6 +449,12 @@
         
         // Démarrer le compte à rebours au chargement
         document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier immédiatement si nous avons une erreur 404
+            if (is404Error()) {
+                redirectToFallback();
+                return;
+            }
+            
             if (isMobile()) {
                 startCountdown();
             } else {
@@ -435,6 +483,15 @@
                 statusText.textContent = "Redirection réussie vers l'application!";
             }
         });
+        
+        // Détecter les erreurs réseau et 404
+        window.addEventListener('error', function(event) {
+            if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT')) {
+                if (event.target.src && event.target.src.includes(window.location.hostname)) {
+                    redirectToFallback();
+                }
+            }
+        }, true);
     </script>
 </body>
 </html>
