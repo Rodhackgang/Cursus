@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Redirection Cursus</title>
+    <!-- Ajout pour le mobile -->
+    <meta name="apple-itunes-app" content="app-id=APP_STORE_ID">
+    <meta name="google-play-app" content="app-id=com.cursus.actualite">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
     <style>
+        /* Styles optimisés */
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
@@ -212,8 +218,8 @@
     </div>
 
     <script>
-        // Schéma de deeplink corrigé
-        const deeplinkURL = "cursus_culture://index";
+        // CORRECTION PRINCIPALE : Utilisation du bon schéma
+        const deeplinkURL = "cursus_actualite://"; // Schéma corrigé
         const playStoreURL = "https://play.google.com/store/apps/details?id=com.cursus.actualite";
         
         // Éléments DOM
@@ -255,9 +261,20 @@
             }, 1000);
         }
         
+        // Détection du navigateur mobile
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
         // Démarrer le compte à rebours au chargement
         document.addEventListener('DOMContentLoaded', () => {
-            startCountdown();
+            if (isMobile()) {
+                startCountdown();
+            } else {
+                statusText.textContent = "Vous semblez être sur un ordinateur. Veuillez utiliser un appareil mobile pour accéder à l'application.";
+                countdownElement.style.display = 'none';
+                document.querySelector('.loader').style.display = 'none';
+            }
         });
         
         // Bouton pour ouvrir manuellement l'application
@@ -267,6 +284,13 @@
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 statusText.textContent = "Redirection réussie vers l'application!";
+            }
+        });
+        
+        // Détecter si l'utilisateur revient à la page (l'application n'a pas ouvert)
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                statusText.textContent = "L'application n'a pas pu être ouverte. Essayez manuellement.";
             }
         });
     </script>
