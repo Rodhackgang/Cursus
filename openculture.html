@@ -172,6 +172,11 @@
             border: 2px solid var(--primary-dark);
         }
         
+        .btn-quaternary {
+            background: linear-gradient(to right, #fdbb2d, #f8a51c);
+            color: white;
+        }
+        
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
@@ -310,28 +315,29 @@
             <button id="open-app" class="btn btn-primary">Ouvrir l'application</button>
             <button id="try-again" class="btn btn-tertiary" style="display: none;">Réessayer</button>
             <a href="https://play.google.com/store/apps/details?id=com.cursus.actualite" class="btn btn-secondary">Installer l'application</a>
+            <button id="web-version" class="btn btn-quaternary">Accéder au contenu web</button>
         </div>
         
         <div class="steps">
             <div class="step fade-in">
                 <div class="step-number">1</div>
                 <div class="step-content">
-                    <p><strong>Cliquez sur "Ouvrir l'application"</strong></p>
-                    <p>Si l'application est déjà installée, cela devrait l'ouvrir automatiquement</p>
+                    <p><strong>Ouvrir l'application</strong></p>
+                    <p>Si l'application est installée, cliquez sur le bouton pour l'ouvrir</p>
                 </div>
             </div>
             <div class="step fade-in" style="animation-delay: 0.2s;">
                 <div class="step-number">2</div>
                 <div class="step-content">
-                    <p><strong>Installez l'application si nécessaire</strong></p>
-                    <p>Si vous ne l'avez pas encore installée, cliquez sur le bouton "Installer l'application"</p>
+                    <p><strong>Installer l'application</strong></p>
+                    <p>Si vous ne l'avez pas encore, installez-la via le bouton dédié</p>
                 </div>
             </div>
             <div class="step fade-in" style="animation-delay: 0.4s;">
                 <div class="step-number">3</div>
                 <div class="step-content">
-                    <p><strong>Réessayez après l'installation</strong></p>
-                    <p>Une fois installée, revenez sur cette page et cliquez sur "Ouvrir l'application"</p>
+                    <p><strong>Accéder au contenu web</strong></p>
+                    <p>Si vous préférez, accédez directement au contenu sur notre site</p>
                 </div>
             </div>
         </div>
@@ -346,55 +352,20 @@
         // Schéma de deep link
         const deeplinkURL = "cursus_actualite://";
         const playStoreURL = "https://play.google.com/store/apps/details?id=com.cursus.actualite";
-        const fallbackURL = "https://www.cursusbf.com/openculture.html";
+        const webContentURL = "https://www.cursusbf.com/openculture.html";
         
         // Éléments DOM
         const statusText = document.getElementById('status-text');
         const countdownElement = document.getElementById('countdown');
         const openAppButton = document.getElementById('open-app');
         const tryAgainButton = document.getElementById('try-again');
+        const webVersionButton = document.getElementById('web-version');
         const errorMessage = document.getElementById('error-message');
         const loader = document.querySelector('.loader');
         const statusContainer = document.querySelector('.status-container');
         
-        // Vérification d'erreur 404
-        function is404Error() {
-            // Vérifier si la page actuelle est une erreur 404
-            if (document.title.includes("404") || 
-                document.body.innerText.includes("404") || 
-                document.body.innerText.includes("Not Found")) {
-                return true;
-            }
-            
-            // Vérifier le code d'état HTTP si possible
-            if (window.performance && window.performance.getEntriesByType) {
-                const resources = window.performance.getEntriesByType("resource");
-                for (let resource of resources) {
-                    if (resource.responseStatus >= 400) {
-                        return true;
-                    }
-                }
-            }
-            
-            return false;
-        }
-        
-        // Fonction de redirection vers la page de secours
-        function redirectToFallback() {
-            // Vérifier que nous ne sommes pas déjà sur la page de secours
-            if (window.location.href !== fallbackURL) {
-                window.location.href = fallbackURL;
-            }
-        }
-        
         // Fonction pour ouvrir l'application
         function openApp() {
-            // Vérifier si nous avons une erreur 404
-            if (is404Error()) {
-                redirectToFallback();
-                return;
-            }
-            
             statusText.textContent = "Ouverture de l'application...";
             loader.style.display = 'block';
             countdownElement.style.display = 'none';
@@ -412,12 +383,6 @@
         
         // Fonction pour afficher l'état d'erreur
         function showError() {
-            // Vérifier si nous avons une erreur 404
-            if (is404Error()) {
-                redirectToFallback();
-                return;
-            }
-            
             statusContainer.style.display = 'none';
             errorMessage.style.display = 'block';
             loader.style.display = 'none';
@@ -449,12 +414,6 @@
         
         // Démarrer le compte à rebours au chargement
         document.addEventListener('DOMContentLoaded', () => {
-            // Vérifier immédiatement si nous avons une erreur 404
-            if (is404Error()) {
-                redirectToFallback();
-                return;
-            }
-            
             if (isMobile()) {
                 startCountdown();
             } else {
@@ -477,21 +436,17 @@
             openApp();
         });
         
+        // Bouton pour accéder à la version web
+        webVersionButton.addEventListener('click', () => {
+            window.location.href = webContentURL;
+        });
+        
         // Détecter si la page est cachée (indique que l'application s'est ouverte)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 statusText.textContent = "Redirection réussie vers l'application!";
             }
         });
-        
-        // Détecter les erreurs réseau et 404
-        window.addEventListener('error', function(event) {
-            if (event.target && (event.target.tagName === 'IMG' || event.target.tagName === 'SCRIPT')) {
-                if (event.target.src && event.target.src.includes(window.location.hostname)) {
-                    redirectToFallback();
-                }
-            }
-        }, true);
     </script>
 </body>
 </html>
