@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cahier des Charges - MeetPay</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #f3f0fb, #e8f5e9);
+      color: #333;
+      padding: 40px 20px;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 18px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 3rem;
+      color: #d81b60;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #4a148c;
+      margin-top: 10px;
+    }
+
+    .section {
+      margin-top: 35px;
+    }
+
+    .section h2 {
+      color: #4a148c;
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      border-left: 6px solid #d81b60;
+      padding-left: 12px;
+    }
+
+    .section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .section ul li {
+      margin-bottom: 10px;
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .section ul li::before {
+      content: "✔";
+      color: #2e7d32;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    .important {
+      font-weight: bold;
+      color: #d81b60;
+    }
+
+    .info-block {
+      background: #fce4ec;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .signature {
+      margin-top: 40px;
+    }
+
+    .signature div {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+
+    .signature .sign-block {
+      width: 45%;
+    }
+
+    .signature p {
+      margin-top: 20px;
+    }
+
+    .contact {
+      background: #ede7f6;
+      padding: 10px 20px;
+      border-left: 5px solid #7b1fa2;
+      margin-bottom: 20px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .signature div {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .signature .sign-block {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">❤️ MeetPay</div>
+      <h1>Cahier des Charges</h1>
+      <p>Développement d’une application de rencontre sécurisée avec paiement</p>
+    </header>
+
+    <div class="contact">
+      <p><strong>Client :</strong> Congo Ibrahim | 📞 +226 77 02 00 69</p>
+      <p><strong>Prestataire :</strong> Rodrigue SAMA | 📞 +226 77 70 17 26 | ✉️ samarodrigue690@gmail.com</p>
+    </div>
+
+    <div class="section">
+      <h2>🎯 Objectif du Projet</h2>
+      <p>Créer une application de rencontre où les utilisateurs peuvent s'inscrire, consulter des profils et échanger via messagerie <strong>après paiement sécurisé</strong>.</p>
+    </div>
+
+    <div class="section">
+      <h2>🧩 Fonctionnalités demandées</h2>
+      <ul>
+        <li>Création de profil utilisateur (nom, âge, ville, bio)</li>
+        <li>Upload de photos (jusqu'à 5 par utilisateur)</li>
+        <li>Algorithme de suggestion de profils compatibles</li>
+        <li>Système de paiement intégré (Orange Money, MTN MoMo, Carte bancaire)</li>
+        <li>Messagerie accessible uniquement après paiement</li>
+        <li>Gestion des crédits ou abonnements mensuels</li>
+        <li>Interface responsive (Mobile & Desktop)</li>
+        <li>Espace admin (modération, statistiques)</li>
+        <li><span class="important">Les frais de serveurs ne sont pas inclus</span> (à la charge du client)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>⏱️ Délai de réalisation</h2>
+      <p><strong>6 à 8 semaines</strong> à compter de l’acceptation du présent cahier et du premier versement.</p>
+    </div>
+
+    <div class="section">
+      <h2>📦 Livrables</h2>
+      <ul>
+        <li>Application web fonctionnelle (responsive)</li>
+        <li>Accès administrateur</li>
+        <li>Documentation minimale</li>
+        <li>Assistance à la mise en ligne</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>💳 Modalités de Paiement</h2>
+      <ul>
+        <li>40% à la commande (démarrage)</li>
+        <li>60% à mi-parcours (avant livraison finale)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>💰 Budget</h2>
+      <div class="info-block">
+        Total TTC : 100 000 FCFA
+      </div>
+    </div>
+
+    <div class="signature">
+      <h2>✍️ Signatures pour accord</h2>
+      <div>
+        <div class="sign-block">
+          <strong>Client : Congo Ibrahim</strong>
+          <p>Fait à .............................................<br>
+          Le ........../............/2025<br>
+          Signature : _____________________</p>
+        </div>
+
+        <div class="sign-block">
+          <strong>Prestataire : Rodrigue SAMA</strong>
+          <p>Fait à .............................................<br>
+          Le ........../............/2025<br>
+          Signature : _____________________</p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2025 Rodrigue SAMA. Tous droits réservés.
+    </footer>
+  </div>
+</body>
+</html>
